@@ -1,15 +1,17 @@
 const { createStore } = require("redux");
 
-// define constants
 const INCREMENT = "INCREMENT";
+const INCREMENT_BY_VALUE = "INCREMENT_BY_VALUE";
 const DECREMENT = "DECREMENT";
+const RESET = "RESET";
+const ADD_USER = "ADD_USER";
 
-//state
 const initialState = {
+  users: ["John"],
+  userCount: 1,
   count: 0,
 };
 
-// action
 const incrementCounter = () => {
   return {
     type: INCREMENT,
@@ -22,7 +24,26 @@ const decrementCounter = () => {
   };
 };
 
-// create reducer
+const resetCounter = () => {
+  return {
+    type: RESET,
+  };
+};
+
+const incrementByValue = (value) => {
+  return {
+    type: INCREMENT_BY_VALUE,
+    payload: value,
+  };
+};
+
+const addUser = (user) => {
+  return {
+    type: ADD_USER,
+    payload: user,
+  };
+};
+
 const counterReducer = (state = initialState, action) => {
   switch (action.type) {
     case INCREMENT:
@@ -37,21 +58,43 @@ const counterReducer = (state = initialState, action) => {
         count: state.count - 1,
       };
 
+    case RESET:
+      return {
+        ...state,
+        count: 0,
+      };
+
+    case INCREMENT_BY_VALUE:
+      return {
+        ...state,
+        count: state.count + action.payload,
+      };
+
+    case ADD_USER:
+      return {
+        users: [...state.users, action.payload],
+        userCount: state.userCount + 1,
+      };
+
     default:
       state;
   }
 };
 
-// create store
 const store = createStore(counterReducer);
 
-// subscribe
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-// dispatch
-store.dispatch(incrementCounter());
-store.dispatch(incrementCounter());
-store.dispatch(incrementCounter());
-store.dispatch(decrementCounter());
+// store.dispatch(incrementCounter());
+// store.dispatch(incrementCounter());
+// store.dispatch(incrementCounter());
+// store.dispatch(decrementCounter());
+// store.dispatch(resetCounter());
+// store.dispatch(incrementCounter());
+// store.dispatch(incrementByValue(5));
+// store.dispatch(incrementByValue(10));
+store.dispatch(addUser("Jane"));
+store.dispatch(addUser("Bob"));
+store.dispatch(addUser("Alice"));
